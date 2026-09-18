@@ -8,7 +8,10 @@ import { cn } from "@/lib/utils";
 import { NavbarSidebar } from "./navbar-sidebar";
 import { useState } from "react";
 import { MenuIcon, Search, ShoppingBag, User } from "lucide-react";
+import { NavigationCategory } from "@/types/navigation";
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 const poppins = Poppins({
     subsets: ["latin"],
     weight: ["400", "700"],
@@ -18,6 +21,10 @@ interface NavItemProps {
     href: string;
     children: React.ReactNode;
     isActive?: boolean;
+}
+
+interface NavbarProps {
+    categories: NavigationCategory[];
 }
 
 const NavbarItem = ({ href, children, isActive }: NavItemProps) => {
@@ -31,12 +38,12 @@ const NavbarItem = ({ href, children, isActive }: NavItemProps) => {
 }
 
 const navbarItems = [
-    { href: "/", children: "Home" },
-    { href: "/shop", children: "Shop" },
-    { href: "/about", children: "About" },
-    { href: "/contact", children: "Contact" }
+    { href: "/", label: "Home" },
+    { href: "/shop", label: "Shop" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" }
 ]
-export const Navbar = () => {
+export const Navbar = ({ categories }: NavbarProps) => {
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -67,6 +74,31 @@ export const Navbar = () => {
                                 </NavbarItem>
                             ))
                         }
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="gap-2">
+                                    Categories
+                                    <ChevronDown className="size-4" aria-hidden="true" />
+                                </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent align="start">
+                                {categories.length > 0 ? (
+                                    categories.map((category) => (
+                                        <DropdownMenuItem key={category.id} asChild>
+                                            <Link href={`/category/${category.id}`}>
+                                                {category.name}
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    ))
+                                ) : (
+                                    <DropdownMenuItem disabled>
+                                        No categories available
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
                     </div>
                     {/* Shopping controls are separate from the browsing links. */}
                     <div className="flex shrink-0 items-center gap-1 sm:gap-2">
@@ -91,7 +123,7 @@ export const Navbar = () => {
                                 <ShoppingBag aria-hidden="true" />
                             </Link>
                         </Button>
-                        <NavbarSidebar items={navbarItems} open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+                        <NavbarSidebar items={navbarItems} categories={categories} open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
                             <Button type="button" variant="ghost" size="icon" className="size-11 lg:hidden" aria-label="Open menu">
                                 <MenuIcon aria-hidden="true" />
                             </Button>

@@ -11,7 +11,7 @@ interface Props {
 export const SubcategoryMenu = ({ category, subcategories, isOpen, position }: Props) => {
     if (!isOpen || subcategories.length === 0) return null;
 
-    const backgroundColor = category.color || "#F5F5F5";
+    const backgroundColor = category.id || "#F5F5F5";
     return (
         <div
             className="fixed z-50 w-60 overflow-hidden rounded-md border shadow-lg"
