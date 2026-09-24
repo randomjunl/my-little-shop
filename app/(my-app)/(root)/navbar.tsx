@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 import { NavbarSidebar } from "./navbar-sidebar";
 import { useState } from "react";
 import { MenuIcon, Search, ShoppingBag, User } from "lucide-react";
-import { NavigationCategory, NavigationItem } from "@/types/navigation";
+import type { NavigationCategory, NavigationItem } from "@/types/navigation";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 const poppins = Poppins({
     subsets: ["latin"],
@@ -19,7 +19,6 @@ const poppins = Poppins({
 
 interface NavItemProps extends NavigationItem {
     isActive?: boolean;
-    children?: React.ReactNode;
 }
 
 interface NavbarProps {
@@ -29,7 +28,7 @@ interface NavbarProps {
 const NavbarItem = ({ href, label, isActive }: NavItemProps) => {
     return (
         <Button variant="outline" asChild className={cn("rounded-full hover:bg-transparent hover:border-primary border-transparent px-3.5 text-lg", isActive && "bg-black text-white hover:bg-black hover:text-white",)}>
-            <Link href={href}>
+            <Link href={href} aria-current={isActive ? "page" : undefined}>
                 {label}
             </Link>
         </Button>
@@ -37,8 +36,6 @@ const NavbarItem = ({ href, label, isActive }: NavItemProps) => {
 }
 
 const navbarItems: NavigationItem[] = [
-    { href: "/", label: "Home" },
-    { href: "/shop", label: "Shop" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
 ];
@@ -46,6 +43,7 @@ const navbarItems: NavigationItem[] = [
 export const Navbar = ({ categories }: NavbarProps) => {
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const isShopActive = pathname === "/shop" || pathname.startsWith("/shop/") || pathname.startsWith("/category/");
 
     return (
         <header className="bg-white border-b">
@@ -56,7 +54,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                 >
                     {/* Left: brand */}
                     <div className="min-w-0">
-                        <Link href="/" className="flex items-center">
+                        <Link href="/" className="flex items-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4" aria-label="My Little Shop home">
                             <span
                                 className={`${poppins.className} text-sm sm:text-lg font-semibold tracking-tight text-slate-900`}
                             >
@@ -67,36 +65,33 @@ export const Navbar = ({ categories }: NavbarProps) => {
 
                     {/* Center: nav items */}
                     <div className="items-center gap-4 hidden lg:flex">
-                        {
-                            navbarItems.map((item) => (
-                                <NavbarItem label={item.label} key={item.href} href={item.href} isActive={item.href === pathname}>
-                                </NavbarItem>
-                            ))
-                        }
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="gap-2">
-                                    Categories
-                                    <ChevronDown className="size-4" aria-hidden="true" />
+                                <Button variant="ghost" className={cn("group min-h-11 gap-2 rounded-full px-3.5 text-lg", isShopActive && "bg-black text-white hover:bg-black hover:text-white")}>
+                                    Shop
+                                    <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" aria-hidden="true" />
                                 </Button>
                             </DropdownMenuTrigger>
 
-                            <DropdownMenuContent align="start">
-                                {categories.length > 0 ? (
-                                    categories.map((category) => (
-                                        <DropdownMenuItem key={category.id} asChild>
-                                            <Link href={`/category/${category.id}`}>
-                                                {category.name}
-                                            </Link>
-                                        </DropdownMenuItem>
-                                    ))
-                                ) : (
-                                    <DropdownMenuItem disabled>
-                                        No categories available
+                            <DropdownMenuContent align="start" sideOffset={10} className="w-64 rounded-xl p-2">
+                                <DropdownMenuItem asChild className="min-h-11 rounded-lg px-3 font-medium aria-[current=page]:bg-accent">
+                                    <Link href="/shop" aria-current={pathname === "/shop" ? "page" : undefined}>
+                                        Shop All
+                                    </Link>
+                                </DropdownMenuItem>
+                                {categories.length > 0 && <DropdownMenuSeparator />}
+                                {categories.map((category) => (
+                                    <DropdownMenuItem key={category.id} asChild className="min-h-11 rounded-lg px-3 aria-[current=page]:bg-accent">
+                                        <Link href={`/category/${category.id}`} aria-current={pathname === `/category/${category.id}` ? "page" : undefined}>
+                                            {category.name}
+                                        </Link>
                                     </DropdownMenuItem>
-                                )}
+                                ))}
                             </DropdownMenuContent>
                         </DropdownMenu>
+                        {navbarItems.map((item) => (
+                            <NavbarItem key={item.href} {...item} isActive={item.href === pathname} />
+                        ))}
 
                     </div>
                     {/* Shopping controls are separate from the browsing links. */}
