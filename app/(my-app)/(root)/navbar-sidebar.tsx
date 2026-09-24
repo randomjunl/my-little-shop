@@ -3,19 +3,21 @@ import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingBag, User } from "lucide-react";
 import { NavigationCategory } from "@/types/navigation";
+import { NavigationItem } from "@/types/navigation";
 
 interface NavbarSidebarProps {
-    items: NavbarItem[];
+    items: NavigationItem[];
     categories: NavigationCategory[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
     children: React.ReactNode;
 }
 
-interface NavbarItem {
-    href: string;
-    label: string;
-}
+// interface NavbarItem {
+//     href: string;
+//     label: string;
+// }
+
 
 
 export const NavbarSidebar = ({ items, categories, open, onOpenChange, children }: NavbarSidebarProps) => {

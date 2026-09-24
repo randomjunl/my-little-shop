@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { NavbarSidebar } from "./navbar-sidebar";
 import { useState } from "react";
 import { MenuIcon, Search, ShoppingBag, User } from "lucide-react";
-import { NavigationCategory } from "@/types/navigation";
+import { NavigationCategory, NavigationItem } from "@/types/navigation";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
@@ -17,32 +17,32 @@ const poppins = Poppins({
     weight: ["400", "700"],
 });
 
-interface NavItemProps {
-    href: string;
-    children: React.ReactNode;
+interface NavItemProps extends NavigationItem {
     isActive?: boolean;
+    children?: React.ReactNode;
 }
 
 interface NavbarProps {
     categories: NavigationCategory[];
 }
 
-const NavbarItem = ({ href, children, isActive }: NavItemProps) => {
+const NavbarItem = ({ href, label, isActive }: NavItemProps) => {
     return (
         <Button variant="outline" asChild className={cn("rounded-full hover:bg-transparent hover:border-primary border-transparent px-3.5 text-lg", isActive && "bg-black text-white hover:bg-black hover:text-white",)}>
             <Link href={href}>
-                {children}
+                {label}
             </Link>
         </Button>
     )
 }
 
-const navbarItems = [
+const navbarItems: NavigationItem[] = [
     { href: "/", label: "Home" },
     { href: "/shop", label: "Shop" },
     { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" }
-]
+    { href: "/contact", label: "Contact" },
+];
+
 export const Navbar = ({ categories }: NavbarProps) => {
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -60,7 +60,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                             <span
                                 className={`${poppins.className} text-sm sm:text-lg font-semibold tracking-tight text-slate-900`}
                             >
-                                Ann&apos;s Wonderworks
+                                My Little Shop
                             </span>
                         </Link>
                     </div>
@@ -69,8 +69,7 @@ export const Navbar = ({ categories }: NavbarProps) => {
                     <div className="items-center gap-4 hidden lg:flex">
                         {
                             navbarItems.map((item) => (
-                                <NavbarItem key={item.href} href={item.href} isActive={item.href === pathname}>
-                                    {item.label}
+                                <NavbarItem label={item.label} key={item.href} href={item.href} isActive={item.href === pathname}>
                                 </NavbarItem>
                             ))
                         }

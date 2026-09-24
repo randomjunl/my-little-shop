@@ -13,8 +13,8 @@ import type { NavigationCategory } from "@/types/navigation";
 
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
-  description: "Admin Dashboard for managing content",
+  title: "My Little Shop",
+  description: "Discover pre-loved finds, artwork, and handmade creations at My Little Shop.",
 };
 
 export default async function RootLayout({

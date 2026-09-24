@@ -55,7 +55,7 @@ export const StoreModal = () => {
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Anns Wdonderworks" {...field} />
+                                    <Input placeholder="My Little Shop" {...field} />
                                 </FormControl>
                                 <FormDescription>
                                     This is your store name. It will be displayed publicly.
