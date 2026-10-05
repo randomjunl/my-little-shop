@@ -133,6 +133,7 @@ export interface User {
   id: string;
   name: string;
   age?: number | null;
+  role: 'admin';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -203,15 +204,50 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
+  listingType: 'secondhand' | 'artwork' | 'other';
+  secondhandDetails?: {
+    condition?: ('like-new' | 'good' | 'fair' | 'poor') | null;
+    /**
+     * Describe scratches, stains, damage, or missing parts. Write 'None known' if applicable.
+     */
+    wear?: string | null;
+  };
+  artworkDetails?: {
+    /**
+     * For example: watercolor on paper or acrylic on canvas.
+     */
+    medium?: string | null;
+    /**
+     * Include units, for example: 12 × 16 inches, unframed.
+     */
+    dimensions?: string | null;
+    framing?: ('framed' | 'unframed' | 'not-applicable') | null;
+  };
+  /**
+   * Choose how the buyer can receive this item. Arrange private pickup addresses separately.
+   */
+  fulfillment: 'pickup' | 'shipping' | 'both';
+  availability: 'available' | 'reserved' | 'sold';
   price: number;
   category: string | Category;
   /**
-   * Optional image used for product display.
+   * Add and drag photos to reorder them. The first photo is the cover image.
+   */
+  photos?:
+    | {
+        image: string | Media;
+        alt: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Existing single-image cover, used when Photos is empty. Add Photos above to replace it.
    */
   image?: (string | null) | Media;
   inventory: number;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -302,6 +338,7 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   age?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -360,12 +397,36 @@ export interface ProductsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   description?: T;
+  listingType?: T;
+  secondhandDetails?:
+    | T
+    | {
+        condition?: T;
+        wear?: T;
+      };
+  artworkDetails?:
+    | T
+    | {
+        medium?: T;
+        dimensions?: T;
+        framing?: T;
+      };
+  fulfillment?: T;
+  availability?: T;
   price?: T;
   category?: T;
+  photos?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+        id?: T;
+      };
   image?: T;
   inventory?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

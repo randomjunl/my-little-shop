@@ -1,22 +1,31 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Product } from "@/payload-types";
+import { getProductCover } from "@/lib/product-photos";
 
 export function ProductGrid({ products }: { products: Product[] }) {
     return (
         <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {products.map((product) => (
+            {products.map((product) => {
+                const cover = getProductCover(product);
+                return (
                 <li key={product.id}>
                     <article className="h-full rounded-lg border p-5">
                         <h2 className="text-lg font-semibold">
-                            {product.name}
+                            <Link
+                                href={`/products/${encodeURIComponent(product.slug)}`}
+                                className="hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                            >
+                                {product.name}
+                            </Link>
                         </h2>
                         <div>
-                            {product.image && typeof product.image === "object" && product.image.url ? (
+                            {cover ? (
                                 <Image
-                                    src={product.image.url}
-                                    alt={product.image.alt || product.name}
-                                    width={product.image.width || 800}
-                                    height={product.image.height || 800}
+                                    src={cover.image.url!}
+                                    alt={cover.alt}
+                                    width={cover.image.width || 800}
+                                    height={cover.image.height || 800}
                                     unoptimized
                                     className="mt-4 aspect-square w-full rounded-md bg-stone-100 object-contain"
                                 />
@@ -37,11 +46,18 @@ export function ProductGrid({ products }: { products: Product[] }) {
                         </p>
 
                         <p className="mt-2 text-sm text-muted-foreground">
-                            {product.inventory > 0 ? "In stock" : "Out of stock"}
+                            {product.availability === "sold"
+                                ? "Sold"
+                                : product.availability === "reserved"
+                                    ? "Reserved"
+                                    : product.inventory > 0
+                                        ? "Available"
+                                        : "Out of stock"}
                         </p>
                     </article>
                 </li>
-            ))}
+                );
+            })}
         </ul>
     );
 }

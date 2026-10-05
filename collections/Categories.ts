@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { isAdministrator } from "@/lib/access";
 
 export const Categories: CollectionConfig = {
     slug: "categories",
@@ -11,9 +12,9 @@ export const Categories: CollectionConfig = {
     },
     access: {
         read: () => true,
-        create: () => true,
-        update: () => true,
-        delete: () => true,
+        create: isAdministrator,
+        update: isAdministrator,
+        delete: isAdministrator,
     },
     fields: [
         {
