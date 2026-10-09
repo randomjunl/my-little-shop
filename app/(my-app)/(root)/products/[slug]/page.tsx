@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-
 import Image from "next/image";
+import { ProductGallery } from "@/components/product-gallery";
 import { getProductPhotos } from "@/lib/product-photos";
 
 interface ProductPageProps {
@@ -87,32 +87,7 @@ export default async function ProductPage({
             </h1>
 
             <div className="mt-6">
-                {photos.length > 0 ? (
-                    <ul
-                        aria-label="Product photos"
-                        className="grid gap-4 sm:grid-cols-2"
-                    >
-                        {photos.map((photo, index) => (
-                            <li
-                                key={photo.id}
-                                className={index === 0 ? "sm:col-span-2" : ""}
-                            >
-                                <Image
-                                    src={photo.src}
-                                    alt={photo.alt}
-                                    width={photo.width}
-                                    height={photo.height}
-                                    unoptimized
-                                    className="max-h-[600px] w-full rounded-lg bg-stone-100 object-contain"
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p className="rounded-lg bg-stone-100 p-8 text-center text-sm">
-                        No photos available.
-                    </p>
-                )}
+                <ProductGallery key={product.id} photos={photos} />
             </div>
 
             <p className="mt-4 text-xl font-medium">
