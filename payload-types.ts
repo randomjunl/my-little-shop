@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     categories: Category;
     products: Product;
+    'purchase-requests': PurchaseRequest;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    'purchase-requests': PurchaseRequestsSelect<false> | PurchaseRequestsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -228,6 +230,10 @@ export interface Product {
    */
   fulfillment: 'pickup' | 'shipping' | 'both';
   availability: 'available' | 'reserved' | 'sold';
+  /**
+   * Managed automatically when a purchase request is accepted or cancelled.
+   */
+  reservationRequest?: (string | null) | PurchaseRequest;
   price: number;
   category: string | Category;
   /**
@@ -248,6 +254,24 @@ export interface Product {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchase-requests".
+ */
+export interface PurchaseRequest {
+  id: string;
+  product: string | Product;
+  name: string;
+  email: string;
+  deliveryPreference: 'pickup' | 'shipping';
+  message?: string | null;
+  /**
+   * Request actions will control this status.
+   */
+  status: 'new' | 'accepted' | 'completed' | 'declined' | 'cancelled';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -288,6 +312,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'products';
         value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'purchase-requests';
+        value: string | PurchaseRequest;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -413,6 +441,7 @@ export interface ProductsSelect<T extends boolean = true> {
       };
   fulfillment?: T;
   availability?: T;
+  reservationRequest?: T;
   price?: T;
   category?: T;
   photos?:
@@ -427,6 +456,20 @@ export interface ProductsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchase-requests_select".
+ */
+export interface PurchaseRequestsSelect<T extends boolean = true> {
+  product?: T;
+  name?: T;
+  email?: T;
+  deliveryPreference?: T;
+  message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

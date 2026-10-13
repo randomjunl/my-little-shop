@@ -175,6 +175,22 @@ export const Products: CollectionConfig = {
             ],
         },
         {
+            name: "reservationRequest",
+            type: "relationship",
+            relationTo: "purchase-requests",
+            label: "Reserved for request",
+            access: {
+                read: ({ req }) => req.user?.role === "admin",
+                create: () => false,
+                update: () => false,
+            },
+            admin: {
+                readOnly: true,
+                description:
+                    "Managed automatically when a purchase request is accepted or cancelled.",
+            },
+        },
+        {
             name: "price",
             type: "number",
             required: true,

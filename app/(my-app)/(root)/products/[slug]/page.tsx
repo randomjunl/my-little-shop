@@ -3,10 +3,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import Image from "next/image";
 import { ProductGallery } from "@/components/product-gallery";
 import { getProductPhotos } from "@/lib/product-photos";
-
+import { PurchaseRequestForm } from "@/components/purchase-request-form";
 interface ProductPageProps {
     params: Promise<{ slug: string }>;
 }
@@ -185,6 +184,14 @@ export default async function ProductPage({
                     </dl>
                 </section>
             )}
+            {product.availability === "available" && product.inventory > 0 && (
+                <PurchaseRequestForm
+                    key={product.id}
+                    productId={product.id}
+                    fulfillment={product.fulfillment}
+                />
+            )}
+
         </section>
     );
 }
