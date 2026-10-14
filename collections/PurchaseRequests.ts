@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { isAdministrator } from "@/lib/access";
+import { acceptPurchaseRequest } from "@/lib/accept-purchase-request";
 
 export const PurchaseRequests: CollectionConfig = {
     slug: "purchase-requests",
@@ -73,6 +74,20 @@ export const PurchaseRequests: CollectionConfig = {
                 readOnly: true,
                 description: "Request actions will control this status.",
             },
+            access: {
+                create: () => false,
+                update: () => false,
+            },
+        },
+        {
+            name: "requestActions",
+            type: "ui",
+            admin: {
+                components: {
+                    Field: "/components/accept-request-button#AcceptRequestButton",
+                },
+            },
         },
     ],
+    endpoints: [acceptPurchaseRequest],
 };
