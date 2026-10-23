@@ -1,6 +1,8 @@
 import type { CollectionConfig } from "payload";
 import { isAdministrator } from "@/lib/access";
 import { acceptPurchaseRequest } from "@/lib/accept-purchase-request";
+import { cancelPurchaseRequest } from "@/lib/cancel-purchase-request";
+import { completePurchaseRequest, declinePurchaseRequest } from "@/lib/finish-purchase-request";
 
 export const PurchaseRequests: CollectionConfig = {
     slug: "purchase-requests",
@@ -89,5 +91,5 @@ export const PurchaseRequests: CollectionConfig = {
             },
         },
     ],
-    endpoints: [acceptPurchaseRequest],
+    endpoints: [acceptPurchaseRequest, cancelPurchaseRequest, completePurchaseRequest, declinePurchaseRequest],
 };

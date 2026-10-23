@@ -4,6 +4,12 @@
 
 ## Getting Started
 
+Administrators manage listings and private purchase requests in Payload. Visitors can
+browse published listings and submit requests without creating an account.
+
+See [First-sale workflow and verification](docs/first-sale-workflow.md) for listing,
+reservation, cancellation, sale completion, and the local verification results.
+
 First, run the development server:
 
 ```bash

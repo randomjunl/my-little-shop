@@ -96,6 +96,7 @@ export const acceptPurchaseRequest: Endpoint = {
 
             await payload.update({
                 collection: "products",
+                depth: 0,
                 id: product.id,
                 data: {
                     availability: "reserved",
@@ -108,6 +109,7 @@ export const acceptPurchaseRequest: Endpoint = {
 
             await payload.update({
                 collection: "purchase-requests",
+                depth: 0,
                 id: purchaseRequest.id,
                 data: { status: "accepted" },
                 overrideAccess: true,
@@ -121,6 +123,12 @@ export const acceptPurchaseRequest: Endpoint = {
             });
         } catch (error) {
             await payload.db.rollbackTransaction(transactionID);
+            if (error && typeof error === "object" && "code" in error && error.code === 112) {
+                throw new APIError(
+                    "The item changed during acceptance. Reload the request and check its availability.",
+                    409,
+                );
+            }
             throw error;
         } finally {
             delete req.transactionID;

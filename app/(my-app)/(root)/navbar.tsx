@@ -96,16 +96,15 @@ export const Navbar = ({ categories }: NavbarProps) => {
                     </div>
                     {/* Shopping controls are separate from the browsing links. */}
                     <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-                        {/* Enable Search when the search panel is implemented. */}
                         <Button
-                            type="button"
                             variant="ghost"
                             size="icon"
                             className="size-11"
-                            disabled
-                            aria-label="Search (coming soon)"
+                            asChild
                         >
-                            <Search aria-hidden="true" />
+                            <Link href="/shop#product-search" aria-label="Search products">
+                                <Search aria-hidden="true" />
+                            </Link>
                         </Button>
                         <Button variant="ghost" size="icon" asChild className="hidden size-11 lg:inline-flex">
                             <Link href="/account" aria-label="Your account">
